@@ -1,9 +1,9 @@
 /*
-.* 화면 > 로직 > API 순서로 파고들기 
+.* 화면 view > 로직 > API 순서로 파고들기 
 .* app 폴더 아래 routes의 역할
 .* URL: localhost:3000/app/discussions
 .* 최종 페이지에 features 폴더에 있는 컴포넌트들로 조립하여 완성
-.* 가장 큰 단위 컴포넌트: 어떤 URL에 어떤 페이지를 매칭해서 보여줄지 결정하는 로직을 담음
+.* 가장 큰 단위 컴포넌트: 어떤 URL에 어떤 페이지를 매핑해서 보여줄지 결정하는 로직을 담음
 */
 import { QueryClient, useQueryClient } from '@tanstack/react-query'; // query: fetch, cache
 import { LoaderFunctionArgs } from 'react-router'; // mapping url to page
@@ -22,6 +22,8 @@ import { DiscussionsList } from '@/features/discussions/components/discussions-l
 .* 화면 그리기 전에 데이터 부터 준비해라는 뜻 
 .* router.tsx의 converter에 queryClient가 있긴함 
 */
+
+// url과 데이터가 연결되는 지점
 export const clientLoader =
   (queryClient: QueryClient) =>
   // 클로저 구조
@@ -37,6 +39,7 @@ export const clientLoader =
     const query = getDiscussionsQueryOptions({ page });
 
     return (
+      // queryKey로 캐시에서 데이터 찾음.
       queryClient.getQueryData(query.queryKey) ??
       (await queryClient.fetchQuery(query))
     );
@@ -80,8 +83,9 @@ const DiscussionsRoute = () => {
 .* 리액트 라우터: URL을 보고 어떤 컴포넌트 페이지를 화면에 그릴지 결정 -> 이 주소로 오면 이 페이지 보여줘
 .* 리액트 쿼리: 서버에서 데이터 가져오고(fetch) 보관(cache) 
 .* 
-.* React router: url과 페이지 매핑, 사용자가 /discussions/1 페이지로 가고싶다.
-.* React query: 그럼 이동전에 미리 서버에서 데이터 챙겨놓을게 fetch, 캐시에 저장 
-.* React Router: 컴포넌트 렌더링, 화면 보여주기
+.* 순서
+.* React router: url과 컴포넌트 (페이지) 매핑, 사용자가 /discussions/1 페이지로 가고싶다.
+.* React query: 그럼 이동전에 미리 서버에서 데이터 챙겨놓을게 fetch, 캐시에 저장. query key -> data 
+.* React Router: 컴포넌트 렌더링, 화면 보여주기 
 */
 export default DiscussionsRoute;
