@@ -55,7 +55,9 @@ const convert = (queryClient: QueryClient) => (m: any) => {
   // react-router가 요구하는 객체 형태로 변환
   return {
     ...rest,
-    loader: clientLoader?.(queryClient),
+    // 함수를 즉시 실행하지않고, 함수 자체를 전달함. 옵셔널 체이닝 ?.으로 clientLoader가 undefined면 호출하지 않음
+    loader: clientLoader?.(queryClient), // async ({ request }: LoaderFunctionArgs) => {...}
+    // 결과적으로 loader에는 데이터가 들어가게 됨. React Router는 이 loader 함수를 페이지 렌더링 전에 실행해서 데이터를 준비함
     action: clientAction?.(queryClient),
     Component,
   };
@@ -102,6 +104,9 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.app.discussions.path,
           lazy: () =>
+            // 첫 import에서 discussions.tsx 모듈 전체를 m으로 받고,
+            // module 객체는 이렇게 생김: { clientLoader, clientAction, default: Component, ...rest }
+            // convert(queryClient)로 변환된 함수에 m을 넣어서 실행
             import('./routes/app/discussions/discussions').then(
               convert(queryClient),
             ),

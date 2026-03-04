@@ -26,9 +26,11 @@ import { DiscussionsList } from '@/features/discussions/components/discussions-l
 // url과 데이터가 연결되는 지점
 export const clientLoader =
   (queryClient: QueryClient) =>
-  // 클로저 구조
+  // 1단계: queryClient 받고나서
+  // 커링, 클로저 구조
   // request 객체를 디스트럭쳐링해서 사용. React Router가 현재 URL 정보가 담긴 request를 던져줌
   async ({ request }: LoaderFunctionArgs) => {
+    // 2단계: request 객체 받기
     // request.url 현재 주소를 분석해서 (url 파싱-분석해서)
     const url = new URL(request.url);
     // url 쿼리스트링의 페이지 번호를 추출 (페이지 정보 추출)
