@@ -5,7 +5,7 @@
 .* 최종 페이지에 features 폴더에 있는 컴포넌트들로 조립하여 완성
 .* 가장 큰 단위 컴포넌트: 어떤 URL에 어떤 페이지를 매핑해서 보여줄지 결정하는 로직을 담음
 */
-import { QueryClient, useQueryClient } from '@tanstack/react-query'; // query: fetch, cache
+import { QueryClient, useQueryClient } from '@tanstack/react-query'; // query: fetch, cache - server side state
 import { LoaderFunctionArgs } from 'react-router'; // mapping url to page
 
 // @/component: at alias, at prefix to avoid relative path
@@ -17,7 +17,7 @@ import { CreateDiscussion } from '@/features/discussions/components/create-discu
 import { DiscussionsList } from '@/features/discussions/components/discussions-list';
 
 /*
-.* 리액트 라우터의 로더 기능과 리액트 쿼리를 연결해주는 코드
+.* clientLoader는 리액트 라우터의 로더 기능과 리액트 쿼리를 연결해주는 코드
 .* 리액트 라우터가 페이지를 이동하기 전에 이 로더 함수를 먼저 실행시켜서 
 .* 화면 그리기 전에 데이터 부터 준비해라는 뜻 
 .* router.tsx의 converter에 queryClient가 있긴함 
@@ -39,7 +39,7 @@ export const clientLoader =
     const query = getDiscussionsQueryOptions({ page });
 
     return (
-      // queryKey로 캐시에서 데이터 찾음.
+      // queryKey로 캐시에서 데이터 찾거나 새로 fetch해서 캐시에 저장한 다음 반환
       queryClient.getQueryData(query.queryKey) ??
       (await queryClient.fetchQuery(query))
     );
@@ -48,7 +48,7 @@ export const clientLoader =
 const DiscussionsRoute = () => {
   // useQueryClient는 react-query에서 가져온 데이터 준비, 관리 도구
   // prefetchInfiniteQuery 내장 기능을 사용해 데이터 미리 가져오기를 수행할 수 있음
-  // 최상위에서 만들어진 queryClient 인스턴스를 컴포넌트 내부에서 가져와서 쓰려면 useQueryClient훅을 사용한다.
+  // 최상위에서 만들어진 queryClient 인스턴스를 컴포넌트 내부에서 가져와서 쓰려면 useQueryClient 훅을 사용한다.
   const queryClient = useQueryClient();
   // queryClient 내부는 키,벨류 형태의 거대 자바스크립트 객체를 들고있다. 브라우저의 메모리, 즉 자바스크립트 변수안에 캐싱/저장이 된다.
   return (
@@ -86,6 +86,6 @@ const DiscussionsRoute = () => {
 .* 순서
 .* React router: url과 컴포넌트 (페이지) 매핑, 사용자가 /discussions/1 페이지로 가고싶다.
 .* React query: 그럼 이동전에 미리 서버에서 데이터 챙겨놓을게 fetch, 캐시에 저장. query key -> data 
-.* React Router: 컴포넌트 렌더링, 화면 보여주기 
+.* React Router: 컴포넌트 데이터와 함께 렌더링, 화면 보여주기 
 */
 export default DiscussionsRoute;
