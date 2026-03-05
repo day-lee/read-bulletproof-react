@@ -91,3 +91,17 @@ const DiscussionsRoute = () => {
 .* React Router: 컴포넌트 데이터와 함께 렌더링, 화면 보여주기 
 */
 export default DiscussionsRoute;
+
+/**
+ * router.tsx에서 import('./routes/app/discussions/discussions')로 동적으로 불러와지면
+ * Module Namespace object를 resolve하는 Promise를 반환한다.
+ * ES6 모듈 규칙에 의해 named export, default export 를 참고해 해당 이름 키로 들어간다.
+ *
+ * 모듈 객체
+ * {
+ * clientLoader: [Function],
+ * default: [Function: DiscussionsRoute]
+ * [Symbol(Symbol.toStringTag)]: "Module"
+ * }
+ *
+ */
