@@ -33,15 +33,17 @@ export const clientLoader =
     // 2단계: request 객체 받기
     // request.url 현재 주소를 분석해서 (url 파싱-분석해서)
     const url = new URL(request.url);
-    // url 쿼리스트링의 페이지 번호를 추출 (페이지 정보 추출)
+    // web API: url 쿼리스트링의 페이지 번호를 추출 (페이지 정보 추출) ?page=1 에서 값만 추출, 스트링형태이므로 Number() 로 변환
     const page = Number(url.searchParams.get('page') || 1);
     // queryClient.prefetchInfiniteQuery()에서 이 데이터는 목록 형태 list 이고,
     // 앞으로 계속 이어 붙일 데이터다 (infinite scroll) 특성 추가
     // 서버에 요청보냄 캐시에 반환된 데이터 저장함. 나중에 컴포넌트가 찾으러 올테니 미리 캐시 창고에 넣어놔야지
     const query = getDiscussionsQueryOptions({ page });
+    // queryOptions 함수로 옵션에 따라 재사용
 
     return (
       // queryKey로 캐시에서 데이터 찾거나 새로 fetch해서 캐시에 저장한 다음 반환
+      // 패턴 queryClient.getQueryData() or fetchQuery()
       queryClient.getQueryData(query.queryKey) ??
       (await queryClient.fetchQuery(query))
     );
@@ -91,6 +93,7 @@ const DiscussionsRoute = () => {
 .* React Router: 컴포넌트 데이터와 함께 렌더링, 화면 보여주기 
 */
 export default DiscussionsRoute;
+// export { clientLoader }; -> Best Practice는 하단에 named, default export 둘다 명시 하는 것
 
 /**
  * router.tsx에서 import('./routes/app/discussions/discussions')로 동적으로 불러와지면
