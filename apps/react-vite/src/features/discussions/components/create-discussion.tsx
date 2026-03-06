@@ -11,6 +11,7 @@ import {
 } from '../api/create-discussion';
 
 export const CreateDiscussion = () => {
+  // 경량 상태관리 zustand로 만든 알림 시스템에서 addNotification 함수를 가져옴
   const { addNotification } = useNotifications();
   const createDiscussionMutation = useCreateDiscussion({
     mutationConfig: {
@@ -29,10 +30,10 @@ export const CreateDiscussion = () => {
         isDone={createDiscussionMutation.isSuccess}
         triggerButton={
           <Button size="sm" icon={<Plus className="size-4" />}>
-            Create Discussion
+            Create Discussion 대시보드에 보이는 버튼
           </Button>
         }
-        title="Create Discussion"
+        title="Create Discussion 타이틀"
         submitButton={
           <Button
             form="create-discussion"
@@ -40,7 +41,7 @@ export const CreateDiscussion = () => {
             size="sm"
             isLoading={createDiscussionMutation.isPending}
           >
-            Submit
+            Submit 제출버튼
           </Button>
         }
       >
