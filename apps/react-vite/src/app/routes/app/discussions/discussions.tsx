@@ -28,7 +28,8 @@ export const clientLoader =
   (queryClient: QueryClient) =>
   // 1단계: queryClient 받고나서
   // 커링, 클로저 구조
-  // request 객체를 디스트럭쳐링해서 사용. React Router가 현재 URL 정보가 담긴 request를 던져줌
+  // request 객체를 디스트럭쳐링해서 사용.
+  // 페이지 이동시점에 React Router가 new Request(currentUrl) 형태로 request 객체 만들어서 loader에 전달함
   async ({ request }: LoaderFunctionArgs) => {
     // 2단계: request 객체 받기
     // request.url 현재 주소를 분석해서 (url 파싱-분석해서)
